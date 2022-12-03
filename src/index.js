@@ -4,4 +4,4 @@ const k = new Knight();
 
 k.makeGraph();
 
-console.log("map: ", k.map, "\n", "graph: ", k.graph[3]);
+console.log("map: ", k.map, "\n", "graph: ", k.graph);

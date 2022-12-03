@@ -4,19 +4,16 @@ export default class Knight {
     this.map = {};
   }
 
-  bestPath(from, to, count = 0, visited = []) {
+  bestPath(from, to, count = 0, queue = [], visited = []) {
     if (JSON.stringify(from) === JSON.stringify(to)) return count;
     const [x, y] = from;
-    const [i, j] = to;
 
     visited.push(from);
 
     let nextSquares = this.moves(x, y);
 
-    for (const square of nextSquares) {
       let [a, b] = square;
       return this.bestPath(square, to, count + 1);
-    }
   }
 
   moves(x, y) {
