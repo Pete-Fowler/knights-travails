@@ -1,7 +1,7 @@
 export default class Knight {
   constructor() {}
 
-  knightMoves(from, to, next = []) {
+  shortestPath(from, to, next = []) {
     [x, y] = from;
     [i, j] = to;
 
@@ -9,7 +9,7 @@ export default class Knight {
     let b = y;
   }
 
-  possibleMoves(x, y) {
+  moves(x, y) {
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],
