@@ -1,6 +1,4 @@
 export default class Knight {
-  constructor() {}
-
   shortestPath(from, to, next = []) {
     [x, y] = from;
     [i, j] = to;
