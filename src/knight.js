@@ -1,4 +1,9 @@
 export default class Knight {
+  constructor() {
+    this.graph = [];
+    this.map = {};
+  }
+
   bestPath(from, to, count = 0, visited = []) {
     if (JSON.stringify(from) === JSON.stringify(to)) return count;
     const [x, y] = from;
@@ -34,19 +39,21 @@ export default class Knight {
   }
 
   makeGraph() {
-    
-    /*
-      for each square in the chess board
-        create a vertex object with 
-          data: [x, y],  // coords
-          nbrs: Set of coords (or array of arrays) from moves
-
-    */
+    let k = 0;
+    for (let i = 0; i <= 7; i++) {
+      for (let j = 0; j <= 7; j++) {
+        const square = [i, j];
+        const moves = this.moves(i, j);
+        this.map[k] = square;
+        this.graph.push(moves);
+        k++;
+      }
+    }
   }
 }
 
 /*
-PROBLEM: Write a function bestPath that takes from and to chess board coords and returns the least number of moves it takes to get there and the actual moves it would take.
+PROBLEM: Write a function bestPath that takes from and to chess board coords and returns the least number of moves it takes to get there and the actual moves it would take. Chess board is 8 x 8 = 64 squares.
 
 APPROACH: Will use a graph, with squares [0, 5] being the vertexes, and edges connecting them if a knight could move between them. The graph can be represented by an edge list:
 [
