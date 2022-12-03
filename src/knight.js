@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export default class Knight {
   constructor() {
     this.graph = [];
@@ -5,18 +7,26 @@ export default class Knight {
   }
 
   bestPath(from, to, count = 0, queue = [], visited = []) {
-    if (JSON.stringify(from) === JSON.stringify(to)) return count;
+    if (_.isEqual(from, to)) return count;
+
     const [x, y] = from;
 
     visited.push(from);
 
-    let nextSquares = this.moves(x, y);
+    let nextSquares = this.moves(x, y, visited);
+    queue.push(...nextSquares);
 
-      let [a, b] = square;
-      return this.bestPath(square, to, count + 1);
+    const square = nextSquares.shift();
+
+    this.bestPath(square, to, count + 1, queue, visited);
+
+    // this.graph.push(...nextSquares);
+
+    // let [a, b] = square;
+    // return this.bestPath(square, to, count + 1);
   }
 
-  moves(x, y) {
+  moves(x, y, visited) {
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],
@@ -32,7 +42,9 @@ export default class Knight {
       (arr) => arr[0] >= 0 && arr[0] <= 7 && arr[1] >= 0 && arr[1] <= 7
     );
 
-    return validMoves;
+    const validUnvisitedMoves = _.difference(validMoves, ...visited);
+
+    return validUnvisitedMoves;
   }
 
   makeGraph() {
