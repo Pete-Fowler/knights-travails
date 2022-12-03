@@ -1,18 +1,17 @@
 export default class Knight {
-  bestPath(from, to, count = 0) {
+  bestPath(from, to, count = 0, visited = []) {
     if (JSON.stringify(from) === JSON.stringify(to)) return count;
     const [x, y] = from;
     const [i, j] = to;
 
+    visited.push(from);
+
     let nextSquares = this.moves(x, y);
 
-    // if (!JSON.stringify(nextSquares).includes(JSON.stringify(to))) {
     for (const square of nextSquares) {
       let [a, b] = square;
       return this.bestPath(square, to, count + 1);
     }
-    // }
-    // return count
   }
 
   moves(x, y) {
@@ -30,7 +29,19 @@ export default class Knight {
     const validMoves = moves.filter(
       (arr) => arr[0] >= 0 && arr[0] <= 7 && arr[1] >= 0 && arr[1] <= 7
     );
+
     return validMoves;
+  }
+
+  makeGraph() {
+    
+    /*
+      for each square in the chess board
+        create a vertex object with 
+          data: [x, y],  // coords
+          nbrs: Set of coords (or array of arrays) from moves
+
+    */
   }
 }
 
