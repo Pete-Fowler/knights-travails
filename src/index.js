@@ -6,4 +6,4 @@ const k = new Knight();
 // k.makeGraph();
 // console.log("map: ", k.map, "\n", "graph: ", k.graph);
 
-k.bestPath([0, 0], [6, 7]);
+console.log(k.bestPath([0, 0], [1, 2]));

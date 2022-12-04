@@ -1,32 +1,32 @@
+import Node from "./node.js";
 import _ from "lodash";
 
 export default class Knight {
-  constructor() {
-    this.graph = [];
-    this.map = {};
-  }
-
-  bestPath(from, to, count = 0, queue = [], visited = []) {
-    if (_.isEqual(from, to)) return count;
-
-    const [x, y] = from;
-
+  bestPath(from, to, distance = 0, queue = [], visited = []) {
     visited.push(from);
 
-    let nextSquares = this.moves(x, y, visited);
-    queue.push(...nextSquares);
+    if (_.isEqual(from, to)) {
+      const str = visited.reduce((a, b, i) => {
+        if (i === 0) return a + `[${b}]`;
+        else return a + ` => [${b}]`;
+      });
+      return `The knight made it in ${distance} move(s): \n${str}`;
+    }
 
-    const square = nextSquares.shift();
+    const nextMoves = this.moves(from, visited);
 
-    this.bestPath(square, to, count + 1, queue, visited);
+    for (const move of nextMoves) {
+      const node = new Node(move, distance + 1);
+      queue.push(node);
+    }
 
-    // this.graph.push(...nextSquares);
+    const node = queue.shift();
 
-    // let [a, b] = square;
-    // return this.bestPath(square, to, count + 1);
+    return this.bestPath(node.coords, to, distance + 1, queue, visited);
   }
 
-  moves(x, y, visited) {
+  moves(coords, visited) {
+    const [x, y] = coords;
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],
@@ -42,42 +42,14 @@ export default class Knight {
       (arr) => arr[0] >= 0 && arr[0] <= 7 && arr[1] >= 0 && arr[1] <= 7
     );
 
-    const validUnvisitedMoves = _.difference(validMoves, ...visited);
+    const validUnvisitedMoves = _.difference(validMoves, visited);
 
     return validUnvisitedMoves;
-  }
-
-  makeGraph() {
-    let k = 0;
-    for (let i = 0; i <= 7; i++) {
-      for (let j = 0; j <= 7; j++) {
-        const square = [i, j];
-        const moves = this.moves(i, j);
-        this.map[k] = square;
-        this.graph.push(moves);
-        k++;
-      }
-    }
   }
 }
 
 /*
-PROBLEM: Write a function bestPath that takes from and to chess board coords and returns the least number of moves it takes to get there and the actual moves it would take. Chess board is 8 x 8 = 64 squares.
+This problem can be seen as the shortest path in an unweighted graph. Therefore we use BFS to solve this problem. 
 
-APPROACH: Will use a graph, with squares [0, 5] being the vertexes, and edges connecting them if a knight could move between them. The graph can be represented by an edge list:
-[
-  [[x, y], [x, y]],   // going from one square to the next is a valid knight move and these are neighbors
-  [[x, y], [x, y]]    // may have longer search time to find an edge?
-]
-
-Or an adjacency list:
-Where a chess square is represented by an array index, and then at that index is an array of all the squares it is linked to through edges.
-
-It could also be where every vertex is a node object, with reference to an array or linked list which contains all of its neighbors
-{
-  data: [x, y],
-  nbrs: [[x, y], [x, y], ..., [x, y]] or set or linked list
-}
-
-
+We try all 8 possible positions where a Knight can reach from its position. If the reachable position is not already visited and is inside the board, we push this state into the queue with a distance 1 more than its parent state. Finally, we return the distance of the target position, when it gets pop out from the queue
 */
