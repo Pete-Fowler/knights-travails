@@ -3,26 +3,25 @@ import _ from "lodash";
 
 export default class Knight {
   bestPath(from, to, distance = 0, queue = [], visited = []) {
-    visited.push(from);
+    queue.push(new Node(from, distance));
 
-    if (_.isEqual(from, to)) {
-      const str = visited.reduce((a, b, i) => {
-        if (i === 0) return a + `[${b}]`;
-        else return a + ` => [${b}]`;
-      });
-      return `The knight made it in ${distance} move(s): \n${str}`;
+    while (queue.length >= 0) {
+      const node = queue.shift();
+      if (_.isEqual(node.coords, to)) {
+        const str = visited.reduce((a, b, i) => {
+          if (i === 0) return a + `[${b}]`;
+          else return a + ` => [${b}]`;
+        });
+      } else {
+        distance++;
+        visited.push(node.coords);
+        const next = this.moves(node.coords, visited);
+        const nextNodes = next.map((move) => new Node(move, distance));
+        for (const node of nextNodes) {
+          queue.push(node);
+        }
+      }
     }
-
-    const nextMoves = this.moves(from, visited);
-
-    for (const move of nextMoves) {
-      const node = new Node(move, distance + 1);
-      queue.push(node);
-    }
-
-    const node = queue.shift();
-
-    return this.bestPath(node.coords, to, distance + 1, queue, visited);
   }
 
   moves(coords, visited) {
