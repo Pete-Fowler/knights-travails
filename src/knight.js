@@ -3,27 +3,39 @@ import _ from "lodash";
 
 export default class Knight {
   bestPath(from, to, distance = 0, queue = [], visited = []) {
-    queue.push(new Node(from, distance));
-
-    while (queue.length >= 0) {
-      const node = queue.shift();
-      if (_.isEqual(node.coords, to)) {
-        const str = visited.reduce((a, b, i) => {
-          if (i === 0) return a + `[${b}]`;
-          else return a + ` => [${b}]`;
-        });
-      } else {
-        distance++;
-        visited.push(node.coords);
-        const next = this.moves(node.coords, visited);
-        const nextNodes = next.map((move) => new Node(move, distance));
-        for (const node of nextNodes) {
-          queue.push(node);
-        }
-      }
+    if (_.isEqual(from.coords || from, to)) {
+      const str = visited.reduce((a, b, i) => {
+        if (i === 0) return a + `[${b}]`;
+        else return a + ` => [${b}]`;
+      });
     }
-  }
 
+    visited.push(new Node((from || from.coords, distance)));
+
+    const next = this.moves(from || from.coords, visited);
+
+    queue.push(next.map((move) => new Node(move, distance + 1)));
+    console.log(queue);
+
+    if (queue.length < 1) return;
+
+    return;
+    // this.bestPath(queue.shift(), to, distance + 1, queue);
+  }
+  /*
+  levelOrder(callback = false, node = this.root, queue = [], visited = []) {
+    if (node === null) return;
+
+    callback ? callback(node) : visited.push(node.data);
+    queue.push(node.left, node.right);
+    const next = queue.shift();
+
+    this.levelOrder(callback, next, queue, visited);
+
+    if (callback) return;
+    return visited;
+  }
+  */
   moves(coords, visited) {
     const [x, y] = coords;
     const moves = [
@@ -42,6 +54,7 @@ export default class Knight {
     );
 
     const validUnvisitedMoves = _.difference(validMoves, visited);
+    // console.log(validUnvisitedMoves);
 
     return validUnvisitedMoves;
   }
