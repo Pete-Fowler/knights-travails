@@ -10,19 +10,32 @@ export default class Knight {
         }
       )}`;
     }
-    visited.push(new Node((from.coords || from, distance)));
+    console.log(
+      "fromcoords:",
+      from.coords,
+      "from:",
+      from,
+      "OR:",
+      from.coords || from
+    );
+
+    visited.push(new Node(from.coords || from, distance));
 
     const next = this.moves(from.coords || from, visited);
+    queue.push(
+      ...next.map((move) => {
+        console.log("move:", move);
+        return new Node(move, distance + 1);
+      })
+    );
 
-    queue.push(...next.map((move) => new Node(move, distance + 1)));
-    console.log(queue);
     if (queue.length < 1) return;
-
+    console.log("f:", from, "\nn:", next, "\nv:", visited, "\nq:", queue);
     return this.bestPath(queue.shift(), to, distance + 1, queue, visited);
   }
 
   moves(from, visited) {
-    const [x, y] = from.coords || from;
+    const [x, y] = from;
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],
@@ -43,20 +56,7 @@ export default class Knight {
     return validUnvisitedMoves;
   }
 }
-/*
-  levelOrder(callback = false, node = this.root, queue = [], visited = []) {
-    if (node === null) return;
 
-    callback ? callback(node) : visited.push(node.data);
-    queue.push(node.left, node.right);
-    const next = queue.shift();
-
-    this.levelOrder(callback, next, queue, visited);
-
-    if (callback) return;
-    return visited;
-  }
-  */
 /*
 This problem can be seen as the shortest path in an unweighted graph. Therefore we use BFS to solve this problem. 
 
