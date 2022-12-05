@@ -16,7 +16,7 @@ export default class Knight {
 
     const next = this.moves(from.coords || from, visited);
     queue.push(
-      ...next.map((move) => new Node(move, [from.path || from].concat(move)))
+      ...next.map((move) => new Node(move, [move].push(from.path || from)))
     );
 
     if (queue.length < 1) return;
