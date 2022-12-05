@@ -4,33 +4,30 @@ import _ from "lodash";
 export default class Knight {
   bestPath(from, to, distance = 0, queue = [], visited = []) {
     if (_.isEqual(from.coords || from, to)) {
-      return `The knight made it in ${from.distance} move(s)! \n ${visited.map(
-        (v) => {
-          return `${v.coords}`;
-        }
-      )}`;
+      return `The knight made it in ${
+        from.path.length
+      } move(s)! \n ${from.path.map((v) => {
+        return `[${v}]\n`;
+      })}`;
     }
-    console.log(
-      "fromcoords:",
-      from.coords,
-      "from:",
-      from,
-      "OR:",
-      from.coords || from
-    );
+    // console.log(
+    //   "fromcoords:",
+    //   from.coords,
+    //   "from:",
+    //   from,
+    //   "OR:",
+    //   from.coords || from
+    // );
 
-    visited.push(new Node(from.coords || from, distance));
+    visited.push(new Node(from.coords || from));
 
     const next = this.moves(from.coords || from, visited);
     queue.push(
-      ...next.map((move) => {
-        console.log("move:", move);
-        return new Node(move, distance + 1);
-      })
+      ...next.map((move) => new Node(move, (from.path || from).concat(move)))
     );
 
     if (queue.length < 1) return;
-    console.log("f:", from, "\nn:", next, "\nv:", visited, "\nq:", queue);
+    // console.log("f:", from, "\nn:", next, "\nv:", visited, "\nq:", queue);
     return this.bestPath(queue.shift(), to, distance + 1, queue, visited);
   }
 

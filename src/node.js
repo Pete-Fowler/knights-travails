@@ -1,6 +1,6 @@
 export default class Node {
-  constructor(coords, distance = 0) {
+  constructor(coords, path = []) {
     this.coords = coords;
-    this.distance = distance;
+    this.path = coords;
   }
 }
