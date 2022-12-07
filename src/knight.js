@@ -2,26 +2,29 @@ import Node from "./node.js";
 import _ from "lodash";
 
 export default class Knight {
-  bestPath(from, to, distance = 0, queue = [], visited = []) {
+  bestPath(from, to, queue = [], visited = []) {
     if (_.isEqual(from.coords || from, to)) {
-      console.log(from.path);
       return `The knight made it in ${
         from.path.length
-      } move(s)! \n ${from.path.map((v) => {
-        return `[${v}]\n`;
+      } move(s)! \n ${from.path.map((move) => {
+        return `[${move}]\n`;
       })}`;
     }
 
     visited.push(new Node(from.coords || from));
 
     const next = this.moves(from.coords || from, visited);
+
     queue.push(
-      ...next.map((move) => new Node(move, [move].push(from.path || from)))
+      ...next.map((move) => {
+        const n = new Node(move, (from.path || [from]).concat([move]));
+        return n;
+      })
     );
 
     if (queue.length < 1) return;
 
-    return this.bestPath(queue.shift(), to, distance + 1, queue, visited);
+    return this.bestPath(queue.shift(), to, queue, visited);
   }
 
   moves(from, visited) {
@@ -41,14 +44,14 @@ export default class Knight {
       (arr) => arr[0] >= 0 && arr[0] <= 7 && arr[1] >= 0 && arr[1] <= 7
     );
 
-    const validUnvisitedMoves = _.difference(validMoves, visited);
+    const visitedCoords = visited.map((v) => v.coords);
 
-    return validUnvisitedMoves;
+    const validUnvisitedMoves = _.difference(
+      validMoves,
+      visitedCoords,
+      _.isEqual
+    );
+
+    return validMoves;
   }
 }
-
-/*
-This problem can be seen as the shortest path in an unweighted graph. Therefore we use BFS to solve this problem. 
-
-We try all 8 possible positions where a Knight can reach from its position. If the reachable position is not already visited and is inside the board, we push this state into the queue with a distance 1 more than its parent state. Finally, we return the distance of the target position, when it gets pop out from the queue
-*/
