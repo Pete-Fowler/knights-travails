@@ -33,8 +33,8 @@ export default class Knight {
     }
   }
 
-  moves(node, visited) {
-    const [x, y] = node.coords;
+  moves(node, visited = []) {
+    const [x, y] = node.coords || node;
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],

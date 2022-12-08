@@ -3,4 +3,4 @@ import _ from "lodash";
 
 const k = new Knight();
 
-console.log(k.bestPath([1, 0], [7, 7]));
+console.log(k.bestPath([7, 0], [0, 7]));
