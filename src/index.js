@@ -3,7 +3,4 @@ import _ from "lodash";
 
 const k = new Knight();
 
-// k.makeGraph();
-// console.log("map: ", k.map, "\n", "graph: ", k.graph);
-
-console.log(k.bestPath([0, 0], [2, 4]));
+console.log(k.bestPath([1, 0], [7, 7]));

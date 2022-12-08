@@ -8,26 +8,30 @@ export default class Knight {
 
     while (q.length > 0) {
       const node = q.shift();
-      console.log(node.path);
+
       if (_.isEqual(node.coords, to)) {
-        return `The knight made it in ${node.path.length} move(s): \n ${node.path}`;
+        return `The knight made it in ${
+          node.path.length - 1
+        } move(s): \n ${node.path
+          .map((move, i) => {
+            if (i === 0) {
+              return `[${move}]`;
+            } else {
+              return ` => [${move}]`;
+            }
+          })
+          .join("")}`;
       }
 
       visited.push(node);
+
       const nextMoves = this.moves(node, visited);
-      const nextNodes = nextMoves.map((move) => {
-        console.log([...node.path, move]);
-        return new Node(move, [...node.path, move]);
-      });
+      const nextNodes = nextMoves.map(
+        (move) => new Node(move, [...node.path, move])
+      );
       q.push(...nextNodes);
     }
   }
-  /*
-  This function needs to take from and to coords.
-  It will enqueue the next moves
-
-
-  */
 
   moves(node, visited) {
     const [x, y] = node.coords;
