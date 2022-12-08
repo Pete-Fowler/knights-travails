@@ -2,33 +2,28 @@ import Node from "./node.js";
 import _ from "lodash";
 
 export default class Knight {
-  bestPath(from, to, queue = [], visited = []) {
-    if (_.isEqual(from.coords || from, to)) {
-      return `The knight made it in ${
-        from.path.length
-      } move(s)! \n ${from.path.map((move) => {
-        return `[${move}]\n`;
-      })}`;
+  bestPath(from, to) {
+    const q = [new Node(from)];
+    const visited = [];
+    while (q.length > 0) {
+      const node = q.shift();
+
+      if (_.isEqual(node.coords, to)) {
+        return `The knight made it in ${node.path.length} move(s): \n ${node.path}`;
+      }
+
+      node.push(visited);
     }
-
-    visited.push(new Node(from.coords || from));
-
-    const next = this.moves(from.coords || from, visited);
-
-    queue.push(
-      ...next.map((move) => {
-        const n = new Node(move, (from.path || [from]).concat([move]));
-        return n;
-      })
-    );
-
-    if (queue.length < 1) return;
-
-    return this.bestPath(queue.shift(), to, queue, visited);
   }
+  /*
+  This function needs to take from and to coords.
+  It will enqueue the next moves
 
-  moves(from, visited) {
-    const [x, y] = from.coords || from;
+
+  */
+
+  moves(node, visited) {
+    const [x, y] = node.coords;
     const moves = [
       [x + 2, y + 1],
       [x + 2, y - 1],
@@ -46,12 +41,12 @@ export default class Knight {
 
     const visitedCoords = visited.map((v) => v.coords);
 
-    const validUnvisitedMoves = _.difference(
+    const validUnvisitedMoves = _.differenceWith(
       validMoves,
       visitedCoords,
       _.isEqual
     );
 
-    return validMoves;
+    return validUnvisitedMoves;
   }
 }
