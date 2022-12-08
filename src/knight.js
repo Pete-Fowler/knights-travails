@@ -5,14 +5,20 @@ export default class Knight {
   bestPath(from, to) {
     const q = [new Node(from)];
     const visited = [];
+
     while (q.length > 0) {
       const node = q.shift();
 
       if (_.isEqual(node.coords, to)) {
         return `The knight made it in ${node.path.length} move(s): \n ${node.path}`;
       }
-
-      node.push(visited);
+      console.log(node);
+      visited.push(node);
+      const nextMoves = this.moves(node, visited);
+      const nextNodes = nextMoves.map(
+        (move) => new Node(move, [...node.path, move])
+      );
+      q.push(nextNodes);
     }
   }
   /*
